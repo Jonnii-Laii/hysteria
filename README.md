@@ -1,10 +1,17 @@
-# VLESS
+# VPS购买网站
+https://www.zhujiceping.com/
+https://my.racknerd.com/clientarea.php(美国)
+https://www.yin-net.com/clientarea.php?action=services(越南)
+
+
+
+# VLESS 方案
 bash <(wget -qO- https://raw.githubusercontent.com/Jonnii-Laii/hysteria/main/VLESS&Reality.sh)
 
 bash <(wget -qO- "https://raw.githubusercontent.com/Jonnii-Laii/hysteria/main/VLESS&Reality.sh")
 
 
-# hysteria
+# Hysteria2 方案
 bash <(wget -qO- https://raw.githubusercontent.com/Jonnii-Laii/hysteria/main/install_hysteria.sh)
 
 bash <(wget -qO- https://raw.githubusercontent.com/Jonnii-Laii/hysteria/main/delete_hysteria_user.sh)
