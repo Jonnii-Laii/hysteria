@@ -1,5 +1,6 @@
 # VLESS
 bash <(wget -qO- https://raw.githubusercontent.com/Jonnii-Laii/xray-autoinstall/main/VLESS%20+%20Reality.sh)
+
 bash <(wget -qO- "https://raw.githubusercontent.com/Jonnii-Laii/xray-autoinstall/main/VLESS%20+%20Reality.sh")
 
 
