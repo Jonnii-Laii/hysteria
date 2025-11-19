@@ -12,28 +12,25 @@ bash <(wget -qO- https://github.com/XTLS/Xray-install/raw/main/install-release.s
 # ====== 2. 生成 UUID ======
 UUID=$(xray uuid)
 SHORT_ID=$(openssl rand -hex 4)
+# 检查 xray 是否安装
+if ! command -v xray &> /dev/null; then
+    echo "Error: xray 未安装，请先安装 Xray" >&2
+    exit 1
+fi
 
-# ====== 3. 使用 OpenSSL 生成 X25519 密钥对 ======
-echo "🔑 自动生成 Reality 密钥..."
-KEY_FILE="/usr/local/etc/xray/reality.keys"
-mkdir -p "$(dirname "$KEY_FILE")"
+# 生成密钥
+KEY_PAIR=$(xray x25519 2>/tmp/xray_keypair_error.log) || {
+    echo "Error: 无法生成 X25519 密钥对，请查看 /tmp/xray_keypair_error.log" >&2
+    exit 1
+}
 
-# 生成私钥
-PRIVATE_KEY_RAW=$(openssl genpkey -algorithm X25519 -outform PEM 2>/dev/null)
-# 提取 base64 格式的私钥
-PRIVATE_KEY=$(echo "$PRIVATE_KEY_RAW" | awk 'NR>1 && NR<11 {printf "%s",$0}')
+PRIVATE_KEY=$(echo "$KEY_PAIR" | grep -oP '(?<=Private key: ).*')
+PUBLIC_KEY=$(echo "$KEY_PAIR"  | grep -oP '(?<=Public key: ).*')
 
-# 生成公钥
-PUBLIC_KEY_RAW=$(openssl pkey -in <(echo "$PRIVATE_KEY_RAW") -pubout -outform PEM 2>/dev/null)
-PUBLIC_KEY=$(echo "$PUBLIC_KEY_RAW" | awk 'NR>1 && NR<12 {printf "%s",$0}')
-
-# 保存密钥到文件
-cat > "$KEY_FILE" <<EOF
-PRIVATE_KEY=$PRIVATE_KEY
-PUBLIC_KEY=$PUBLIC_KEY
-EOF
-chmod 600 "$KEY_FILE"
-echo "✅ Reality 密钥生成完成并保存到 $KEY_FILE"
+echo "=============================="
+echo "Private Key: $PRIVATE_KEY"
+echo "Public Key:  $PUBLIC_KEY"
+echo "=============================="
 
 # ====== 4. 创建 Xray 配置 ======
 mkdir -p /usr/local/etc/xray
