@@ -1,3 +1,4 @@
+# 这是辅助生成vless密钥的脚本
 #!/bin/bash
 set -e
 
