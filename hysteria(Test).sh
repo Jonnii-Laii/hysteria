@@ -178,13 +178,13 @@ echo "======== Hysteria2 客户端链接 ========"
 echo
 if [ -n "$IPV6" ]; then
   echo "IPv6："
-  echo "hysteria2://${USERNAME}:${PASSWORD}@[$IPV6]:$PORT/?obfs=salamander&obfs-password=$OBFS_PASSWORD&ports=40000-50000&upmbps=300&downmbps=1000&sni=$SNI&insecure=1#Hysteria2-IPv6"
+  echo "hysteria2://${PASSWORD}@[$IPV6]:$PORT/?obfs=salamander&obfs-password=$OBFS_PASSWORD&ports=40000-50000&upmbps=300&downmbps=1000&sni=$SNI&insecure=1#Hysteria2-IPv6"
   echo
 fi
 
 if [ -n "$IPV4" ]; then
   echo "IPv4："
-  echo "hysteria2://${USERNAME}:${PASSWORD}@$IPV4:$PORT/?obfs=salamander&obfs-password=$OBFS_PASSWORD&ports=40000-50000&upmbps=300&downmbps=1000&sni=$SNI&insecure=1#Hysteria2-IPv4"
+  echo "hysteria2://${PASSWORD}@$IPV4:$PORT/?obfs=salamander&obfs-password=$OBFS_PASSWORD&ports=40000-50000&upmbps=300&downmbps=1000&sni=$SNI&insecure=1#Hysteria2-IPv4"
   echo
 fi
 
