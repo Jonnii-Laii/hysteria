@@ -37,52 +37,48 @@ openssl req -x509 -newkey rsa:2048 -sha256 -days 3650 -nodes \
 # -----------------------------
 # 写入 Hysteria2 配置文件
 # -----------------------------
-cat > /etc/hysteria/config.yaml <<EOF
-listen: :443                    # 监听端口
+cat > /etc/hysteria/config.yaml <<'EOF'
+listen: :443
 
 auth:
-  type: userpass               # 认证方式
+  type: userpass
   userpass:
-    main: abc123a              # 用户名:main 密码:abc123a（建议改复杂点）
+    main: abc123a
 
 tls:
   cert: /etc/hysteria/cert.pem
   key: /etc/hysteria/key.pem
-  alpn:
-    - h3                       # 支持 HTTP/3
 
 masquerade:
   type: proxy
   proxy:
     url: https://www.bing.com
     rewriteHost: true
-    protocol: https
-    userAgent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36
 
-obfs:                          # 开启 salamander 混淆（强烈推荐）
+obfs:
   type: salamander
-  password: cry_me_a_river      # 随便设一个复杂密码，客户端也要配一样
+  password: abc123a       # 和主密码一致
 
-brutal:                        # Brutal 模式参数（核心提速）
-  upMbps: 300                  # 客户端预计上传，先设 300，后续可调到 400-500
-  downMbps: 1000               # 服务器下行能力，设 1000 没问题
+brutal:
+  upMbps: 1000
+  downMbps: 1000
+
+ports: 40000-50000
 
 quic:
-  max_idle_timeout: 60s        # 提高空闲超时，更稳
+  max_idle_timeout: 60s
   max_ack_delay: 25ms
-  maxStreams: 100              # 增加并发流，提升多任务速度
+  maxStreams: 100
   initStreamRecvWindow: 8388608
   maxStreamRecvWindow: 8388608
   initConnRecvWindow: 20971520
   maxConnRecvWindow: 20971520
 
-ports: 40000-50000             # 端口跳跃，防 QoS 限速（客户端也要开启对应设置）
-
-bandwidth:                     # 可选，进一步优化带宽估算
-  up: 500 mbps
+bandwidth:
+  up: 1000 mbps
   down: 1000 mbps
 
-fastOpen: true                 # 启用 QUIC Fast Open
+fastOpen: true
 EOF
 
 # -----------------------------
