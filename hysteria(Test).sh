@@ -168,18 +168,30 @@ systemctl restart systemd-journald
 # -----------------------------
 IPV6=$(ip -6 addr show scope global | grep inet6 | awk '{print $2}' | cut -d/ -f1 | head -n 1)
 IPV4=$(ip -4 addr show scope global | grep inet | awk '{print $2}' | cut -d/ -f1 | head -n 1)
-
 PORT=443
 PASSWORD="main:abc123a"
+OBFS_PASSWORD="password: abc123a"  # obfs 密码，与认证密码一致
+SNI="www.bing.com"       # 根据你的 masquerade url 设置，可改成随机或固定域名
 
 echo
 echo "======== Hysteria2 客户端链接 ========"
 echo
-echo "IPv6："
-echo "hy2://$PASSWORD@[$IPV6]:$PORT?insecure=1&sni=$RAND_CN#Hysteria2-IPv6"
-echo
-echo "IPv4："
-echo "hy2://$PASSWORD@$IPV4:$PORT?insecure=1&sni=$RAND_CN#Hysteria2-IPv4"
-echo
+if [ -n "$IPV6" ]; then
+  echo "IPv6："
+  echo "hysteria2://${USERNAME}:${PASSWORD}@[$IPV6]:$PORT/?obfs=salamander&obfs-password=$OBFS_PASSWORD&ports=40000-50000&upmbps=300&downmbps=1000&sni=$SNI&insecure=1#Hysteria2-IPv6"
+  echo
+fi
+
+if [ -n "$IPV4" ]; then
+  echo "IPv4："
+  echo "hysteria2://${USERNAME}:${PASSWORD}@$IPV4:$PORT/?obfs=salamander&obfs-password=$OBFS_PASSWORD&ports=40000-50000&upmbps=300&downmbps=1000&sni=$SNI&insecure=1#Hysteria2-IPv4"
+  echo
+fi
+
 echo "======================================"
 echo "Hysteria2 高性能商用版部署完成。"
+echo "说明："
+echo "- 认证：用户名 $USERNAME，密码 $PASSWORD"
+echo "- obfs 密码：$OBFS_PASSWORD（已包含在链接中）"
+echo "- 支持 Nekoray / Clash Verge / sing-box 等客户端导入"
+echo "- 如需调整 Brutal 速率，可修改链接中的 upmbps/downmbps 参数"
