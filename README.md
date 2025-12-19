@@ -3,6 +3,8 @@ https://www.zhujiceping.com/
 
 https://my.racknerd.com/clientarea.php(美国)
 
+https://billing.dedirock.com/clientarea.php?action=services
+
 https://app.cloudcone.com/vps/356/create?token=ssd-vps-2
 
 https://www.yin-net.com/clientarea.php?action=services(越南)
