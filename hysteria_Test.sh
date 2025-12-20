@@ -58,18 +58,16 @@ masquerade:
     rewriteHost: true
     protocol: https
 
-brutal:
-  upMbps: 1000
-  downMbps: 1000
-
 quic:
   max_idle_timeout: 60s
-  max_ack_delay: 25ms
-  maxStreams: 100
-  initStreamRecvWindow: 8388608
-  maxStreamRecvWindow: 8388608
-  initConnRecvWindow: 20971520
-  maxConnRecvWindow: 20971520
+  max_ack_delay: 15ms
+  maxStreams: 256
+
+  initStreamRecvWindow: 16777216      # 16MB
+  maxStreamRecvWindow: 16777216       # 16MB
+
+  initConnRecvWindow: 33554432        # 32MB
+  maxConnRecvWindow: 67108864         # 64MB
 
 fastOpen: true
 EOF
