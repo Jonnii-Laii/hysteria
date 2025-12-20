@@ -187,6 +187,7 @@ net.ipv4.udp_wmem_min = 65536
 net.core.somaxconn = 8192
 net.ipv4.udp_rfc2460 = 1
 
+
 EOF
 
 # 应用内核参数
