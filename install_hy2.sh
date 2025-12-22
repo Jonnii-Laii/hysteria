@@ -98,6 +98,7 @@ systemctl enable hysteria
 systemctl restart hysteria
 
 cat >> /etc/sysctl.conf <<EOF
+
 # =========================
 # 文件描述符限制（适配高并发）
 # =========================
@@ -105,12 +106,12 @@ fs.file-max = 1048576
 fs.nr_open = 1048576
 
 # =========================
-# 连接跟踪表大小（适用于代理、NAT 等）
+# 连接跟踪表大小
 # =========================
 net.netfilter.nf_conntrack_max = 262144
 
 # =========================
-# IPv6 优化（如不使用 IPv6 可删除以下几行）
+# IPv6 优化（如不使用可删除）
 # =========================
 net.ipv6.conf.all.forwarding = 1
 net.ipv6.conf.default.forwarding = 1
@@ -123,25 +124,25 @@ net.ipv6.icmp.ratelimit = 1000
 # 通用网络优化
 # =========================
 net.core.default_qdisc = fq
-net.ipv4.tcp_congestion_control = bbr                  # Hysteria 2 Brutal 核心，必须保留
+net.ipv4.tcp_congestion_control = bbr                  # 必须保留
 net.core.netdev_max_backlog = 8192
 net.ipv4.ip_local_port_range = 10240 65535
-net.core.somaxconn = 40960                             # 增大监听队列，提升并发和初始连接速度
+net.core.somaxconn = 40960                             # 保留：提升并发和初始连接
 
 # =========================
-# TCP 参数优化（通用 + Reality 低延迟高吞吐）
+# TCP 参数优化（低延迟 + 高并发）
 # =========================
-net.ipv4.tcp_fastopen = 3                              # 显著加速初始连接（Reality 尤其明显）
+net.ipv4.tcp_fastopen = 3
 net.ipv4.tcp_mtu_probing = 1
-net.ipv4.tcp_fin_timeout = 10                          # 更快释放端口，降低延迟
+net.ipv4.tcp_fin_timeout = 10
 net.ipv4.tcp_tw_reuse = 1
 net.ipv4.tcp_tw_recycle = 0
 net.ipv4.tcp_slow_start_after_idle = 0
 net.ipv4.tcp_syncookies = 1
-net.ipv4.tcp_max_syn_backlog = 40960                   # 高并发防连接积压
-net.ipv4.tcp_max_tw_buckets = 2000000                  # 防止 TIME_WAIT 溢出
-net.ipv4.tcp_ecn = 1                                   # 与 BBR 配合更好利用带宽
-net.ipv4.tcp_low_latency = 1                           # 优先低延迟（网页、交互类流量更流畅）
+net.ipv4.tcp_max_syn_backlog = 40960
+net.ipv4.tcp_max_tw_buckets = 2000000
+net.ipv4.tcp_ecn = 1
+net.ipv4.tcp_low_latency = 1
 net.ipv4.tcp_window_scaling = 1
 net.ipv4.tcp_sack = 1
 net.ipv4.tcp_fack = 1
@@ -159,25 +160,22 @@ net.ipv4.conf.all.rp_filter = 1
 net.ipv4.conf.default.rp_filter = 1
 
 # =========================
-# 缓冲区 & 内存优化（混合场景平衡值）
+# 缓冲区优化（关键：恢复您原来的高速度值）
 # =========================
-# TCP 缓冲区（Reality 大文件下载更强）
-net.ipv4.tcp_rmem = 4096 131072 33554432
-net.ipv4.tcp_wmem = 4096 131072 33554432
+net.ipv4.tcp_rmem = 4096 87380 16777216                # 恢复原来值
+net.ipv4.tcp_wmem = 4096 65536 16777216                # 恢复原来值
+net.core.rmem_default = 262144
+net.core.wmem_default = 262144
+net.core.rmem_max = 33554432                           # 恢复 32MB
+net.core.wmem_max = 33554432                           # 恢复 32MB
 
-# UDP 缓冲区（Hysteria 2 高吞吐保留）
+# UDP 缓冲区（Hysteria 2 保留您原来值）
 net.ipv4.udp_mem = 65536 131072 33554432
 net.ipv4.udp_rmem_min = 65536
 net.ipv4.udp_wmem_min = 65536
 
-# 系统最大缓冲区（放开上限，兼容两者）
-net.core.rmem_default = 262144
-net.core.wmem_default = 262144
-net.core.rmem_max = 67108864
-net.core.wmem_max = 67108864
-
 # =========================
-# UDP 高并发 & 低丢包专项优化（Hysteria 2 核心）
+# UDP 高并发优化（Hysteria 2 核心）
 # =========================
 net.core.optmem_max = 25165824
 net.core.netdev_budget = 600
