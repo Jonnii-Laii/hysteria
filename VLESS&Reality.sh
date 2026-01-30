@@ -118,8 +118,8 @@ echo "$CLIENT_LINK"
 
 # 将连接信息追加写入 config.json 最前端（作为注释）
 {
-  echo "// 客户端连接示例（NekoBox 格式）："
-  echo "// $CLIENT_LINK"
+  echo "# 客户端连接示例（NekoBox 格式）："
+  echo "# $CLIENT_LINK"
   echo ""
   cat /usr/local/etc/xray/config.json
 } > /usr/local/etc/xray/config.json.tmp
