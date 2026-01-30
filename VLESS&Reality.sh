@@ -101,8 +101,8 @@ EOF
 systemctl daemon-reload
 systemctl enable xray
 systemctl restart xray
+systemctl status xray --no-pager -l
 
-# ====== 8. 输出连接信息 ======
 # ====== 8. 输出连接信息 ======
 CLIENT_LINK="vless://$UUID@$SERVER_IP:443?encryption=none&security=reality&flow=xtls-rprx-vision&sni=www.bing.com&fp=chrome&pbk=$PUBLIC_KEY&sid=$SHORT_ID&type=tcp#Reality_$SHORT_ID"
 echo -e "\n===== Reality 配置信息 ====="
