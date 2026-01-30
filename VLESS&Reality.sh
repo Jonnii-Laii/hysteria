@@ -103,6 +103,8 @@ systemctl enable xray
 systemctl restart xray
 
 # ====== 8. 输出连接信息 ======
+# ====== 8. 输出连接信息 ======
+CLIENT_LINK="vless://$UUID@$SERVER_IP:443?encryption=none&security=reality&flow=xtls-rprx-vision&sni=www.bing.com&fp=chrome&pbk=$PUBLIC_KEY&sid=$SHORT_ID&type=tcp#Reality_$SHORT_ID"
 echo -e "\n===== Reality 配置信息 ====="
 echo "服务器IP: $SERVER_IP"
 echo "UUID: $UUID"
@@ -112,4 +114,13 @@ echo "ShortID: $SHORT_ID"
 echo "伪装域名: www.bing.com"
 echo "端口: 443"
 echo -e "\n客户端示例（NekoBox 格式）："
-echo "vless://$UUID@$SERVER_IP:443?encryption=none&security=reality&flow=xtls-rprx-vision&sni=www.bing.com&fp=chrome&pbk=$PUBLIC_KEY&sid=$SHORT_ID&type=tcp#Reality_$SHORT_ID"
+echo "$CLIENT_LINK"
+
+# 将连接信息追加写入 config.json 最前端（作为注释）
+{
+  echo "// 客户端连接示例（NekoBox 格式）："
+  echo "// $CLIENT_LINK"
+  echo ""
+  cat /usr/local/etc/xray/config.json
+} > /usr/local/etc/xray/config.json.tmp
+mv /usr/local/etc/xray/config.json.tmp /usr/local/etc/xray/config.json
