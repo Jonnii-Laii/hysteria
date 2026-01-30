@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+
 echo "======================================"
 echo " 🚀 Xray Reality 一键安装脚本"
 echo "======================================"
@@ -34,13 +35,10 @@ SHORT_ID=$(openssl rand -hex 4)
 mkdir -p /usr/local/etc/xray
 mkdir -p /var/log/xray
 
-# ====== 5. 写入 Reality 配置（在最前端追加连接信息注释） ======
+# ====== 5. 写入 Reality 配置 ======
 SERVER_IP=$(curl -s ipv4.ip.sb)
 
-VLESS_URL="vless://$UUID@$SERVER_IP:443?encryption=none&security=reality&flow=xtls-rprx-vision&sni=www.bing.com&fp=chrome&pbk=$PUBLIC_KEY&sid=$SHORT_ID&type=tcp#Reality_$SHORT_ID"
-
 cat > /usr/local/etc/xray/config.json << EOF
-// $VLESS_URL
 {
   "log": {
     "loglevel": "warning",
@@ -84,6 +82,7 @@ EOF
 
 # ====== 6. 创建 systemd 服务 ======
 echo "⚙️ 创建 systemd 服务..."
+
 cat > /etc/systemd/system/xray.service <<EOF
 [Unit]
 Description=Xray Service
@@ -115,4 +114,4 @@ echo "伪装域名: www.bing.com"
 echo "端口: 443"
 
 echo -e "\n客户端示例（NekoBox 格式）："
-echo "$VLESS_URL"
+echo "vless://$UUID@$SERVER_IP:443?encryption=none&security=reality&flow=xtls-rprx-vision&sni=www.bing.com&fp=chrome&pbk=$PUBLIC_KEY&sid=$SHORT_ID&type=tcp#Reality_$SHORT_ID"
