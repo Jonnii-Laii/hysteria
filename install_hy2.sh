@@ -202,11 +202,38 @@ PASSWORD=$(grep -E '^[[:space:]]*main:' /etc/hysteria/config.yaml | sed -E 's/[[
 
 systemctl status hysteria --no-pager
 
-# 拼接输出
-echo -e "\n客户端IPV6连接信息：\nhy2://$PASSWORD@[$IPV6]:$PORT?insecure=1&sni=bing.com#Hysteria2-$IPV6\n"
+# 拼接客户端连接链接
+LINK_IPV4="hy2://$PASSWORD@$IPV4:$PORT?insecure=1&sni=bing.com#Hysteria2-$IPV4"
+LINK_IPV6="hy2://$PASSWORD@[$IPV6]:$PORT?insecure=1&sni=bing.com#Hysteria2-$IPV6"
 
-echo -e "\n客户端IPV4连接信息：\nhy2://$PASSWORD@$IPV4:$PORT?insecure=1&sni=bing.com#Hysteria2-$IPV4\n"
+# 输出到终端
+echo -e "\n客户端IPV6连接信息：\n$LINK_IPV6\n"
+echo -e "\n客户端IPV4连接信息：\n$LINK_IPV4\n"
 
-# 输出状态
-echo -e "\n✅ Hysteria2 已部署完毕，使用端口 443，自签 TLS，已开启高并发优化。"
+
 systemctl status hysteria --no-pager
+
+# 输出完成提示
+echo -e "\n✅ Hysteria2 已部署完毕，使用端口 443，自签 TLS，已开启高并发优化。"
+
+# ────────────────────────────────────────────────
+# 新增：将连接信息作为注释写入配置文件最前面
+# ────────────────────────────────────────────────
+{
+  echo "# Hysteria2 客户端连接信息（生成时间：$(date '+%Y-%m-%d %H:%M:%S')）"
+  echo "# -------------------------------------------------------------"
+  echo "# IPv4 连接："
+  echo "# $LINK_IPV4"
+  echo "#"
+  echo "# IPv6 连接："
+  echo "# $LINK_IPV6"
+  echo "# -------------------------------------------------------------"
+  echo ""
+  cat /etc/hysteria/config.yaml
+} > /etc/hysteria/config.yaml.tmp
+
+# 替换原文件（使用 mv 保证原子性）
+mv /etc/hysteria/config.yaml.tmp /etc/hysteria/config.yaml
+
+echo -e "\n已将客户端连接信息以注释形式写入 /etc/hysteria/config.yaml 文件头部。"
+
