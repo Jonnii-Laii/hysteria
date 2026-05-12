@@ -1,32 +1,5 @@
 #!/bin/bash
 
-# -------------------------------
-# 🔐 脚本访问密码保护（SHA-256）
-# -------------------------------
-
-# 这里填写你想要的明文密码（开发者用）
-PASSWORD_PLAIN="psw2025-"
-
-# 将密码生成 SHA-256 哈希，用于校验
-# 生成方法：
-# echo -n "psw2025-" | sha256sum
-# 将输出的 hash 填写在下面
-PASSWORD_HASH="6f310eb32ef875b41cf53fe04182ec53425fcb8d52e856e3dc963840e9dcd67d"
-
-# 用户输入密码
-read -sp "请输入访问密码: " INPUT_PASSWORD
-echo
-
-# 校验输入
-INPUT_HASH=$(echo -n "$INPUT_PASSWORD" | sha256sum | awk '{print $1}')
-
-if [ "$INPUT_HASH" != "$PASSWORD_HASH" ]; then
-    echo "密码错误，脚本终止！"
-    exit 1
-fi
-
-echo "密码验证通过，继续执行脚本…"
-
 # 🛠️ 先修复 Buster 源问题（仅 Debian 10）
 if grep -qi 'buster' /etc/os-release 2>/dev/null || grep -qi 'buster' /etc/debian_version 2>/dev/null; then
     echo "[INFO] Detected Debian 10 (Buster) - switching APT sources to archive.debian.org"
