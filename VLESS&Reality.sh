@@ -2,44 +2,30 @@
 set -e
 
 echo "======================================"
-echo " 🚀 Xray Reality 一键安装脚本"
+echo "     🚀 Xray Reality 一键安装脚本"
 echo "======================================"
 
 # ====== 1. 安装 Xray ======
 echo "🚀 安装官方 Xray..."
 bash <(wget -qO- https://github.com/XTLS/Xray-install/raw/main/install-release.sh) install -u root
 
-# ====== 2. 获取 Xray 版本 ======
-XRAY_VERSION=$(xray version | head -n1 | awk '{print $2}')
-echo "🛠 Xray 版本: $XRAY_VERSION"
-
-# ====== 3. 生成 UUID 和 Reality 密钥 ======
+# ====== 2. 生成 UUID 和 Reality 密钥 ======
 echo "🔑 生成 UUID 和 Reality 密钥..."
 UUID=$(xray uuid)
 KEY_PAIR=$(xray x25519)
-
-# 根据版本判断字段提取方式
-if [[ "$XRAY_VERSION" < "25.10" ]]; then
-    # 旧版本
-    PRIVATE_KEY=$(echo "$KEY_PAIR" | awk -F': ' '/Private key/ {print $2}')
-    PUBLIC_KEY=$(echo "$KEY_PAIR" | awk -F': ' '/Public key/ {print $2}')
-else
-    # 新版本
-    PRIVATE_KEY=$(echo "$KEY_PAIR" | awk -F':' '/PrivateKey/ {print $2}' | tr -d ' ')
-    PUBLIC_KEY=$(echo "$KEY_PAIR" | awk -F':' '/Password/ {print $2}' | tr -d ' ')
-fi
-
+PRIVATE_KEY=$(echo "$KEY_PAIR" | grep 'Private key' | awk '{print $3}')
+PUBLIC_KEY=$(echo "$KEY_PAIR" | grep 'Public key' | awk '{print $3}')
 SHORT_ID=$(openssl rand -hex 4)
 
-# ====== 4. 创建配置目录 ======
+# ====== 3. 创建配置目录 ======
 mkdir -p /usr/local/etc/xray
 mkdir -p /var/log/xray
 
-# ====== 5. 写入 Reality 配置 ======
+# ====== 4. 写入 Reality 配置 ======
 SERVER_IP=$(curl -s ipv4.ip.sb)
-
 cat > /usr/local/etc/xray/config.json << EOF
 {
+  # vless://$UUID@$SERVER_IP:443?encryption=none&security=reality&flow=xtls-rprx-vision&sni=www.bing.com&fp=chrome&pbk=$PUBLIC_KEY&sid=$SHORT_ID&type=tcp#VLESS_$SERVER_IP
   "log": {
     "loglevel": "warning",
     "access": "/var/log/xray/access.log",
@@ -80,9 +66,8 @@ cat > /usr/local/etc/xray/config.json << EOF
 }
 EOF
 
-# ====== 6. 创建 systemd 服务 ======
+# ====== 5. 创建 systemd 服务 ======
 echo "⚙️ 创建 systemd 服务..."
-
 cat > /etc/systemd/system/xray.service <<EOF
 [Unit]
 Description=Xray Service
@@ -98,20 +83,18 @@ LimitNOFILE=65535
 WantedBy=multi-user.target
 EOF
 
-# ====== 7. 启动并开机自启 ======
+# ====== 6. 启动并开机自启 ======
 systemctl daemon-reload
 systemctl enable xray
 systemctl restart xray
 
-# ====== 8. 输出连接信息 ======
+# ====== 7. 输出连接信息 ======
 echo -e "\n===== Reality 配置信息 ====="
 echo "服务器IP: $SERVER_IP"
 echo "UUID: $UUID"
-echo "PrivateKey: $PRIVATE_KEY"
-echo "PublicKey/Password: $PUBLIC_KEY"
+echo "PublicKey: $PUBLIC_KEY"
 echo "ShortID: $SHORT_ID"
 echo "伪装域名: www.bing.com"
 echo "端口: 443"
-
-echo -e "\n客户端示例（NekoBox 格式）："
-echo "vless://$UUID@$SERVER_IP:443?encryption=none&security=reality&flow=xtls-rprx-vision&sni=www.bing.com&fp=chrome&pbk=$PUBLIC_KEY&sid=$SHORT_ID&type=tcp#Reality_$SHORT_ID"
+echo -e "客户端示例（NekoBox 格式）：\n\
+vless://$UUID@$SERVER_IP:443?encryption=none&security=reality&flow=xtls-rprx-vision&sni=www.bing.com&fp=chrome&pbk=$PUBLIC_KEY&sid=$SHORT_ID&type=tcp#VLESS_$SERVER_IP"
