@@ -74,8 +74,17 @@ mkdir -p /var/log/xray
 
 # ====== 5. 写入 Reality 配置 ======
 
-SERVER_IP=$(curl -s ipv4.ip.sb)
+SERVER_IP=$(curl -4fsS --max-time 10 https://api.ipify.org) || {
+    echo "❌ 无法获取服务器公网 IPv4"
+    exit 1
+}
 
+if [[ ! "$SERVER_IP" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+    echo "❌ 获取的 IP 格式异常: $SERVER_IP"
+    exit 1
+fi
+
+echo "✅ 检测到服务器 IP: ${SERVER_IP}"
 
 
 cat > /usr/local/etc/xray/config.json << EOF
