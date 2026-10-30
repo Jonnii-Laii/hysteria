@@ -16,7 +16,7 @@ echo "======================================"
 
 echo "🚀 安装官方 Xray..."
 
-bash <(wget -qO- https://github.com/XTLS/Xray-install/raw/main/install-release.sh) install -u root
+bash <(wget -qO- 'https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh') install
 
 
 
