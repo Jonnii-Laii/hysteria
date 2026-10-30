@@ -1,7 +1,7 @@
 # VPS购买网站
 https://www.zhujiceping.com/
-
-https://my.racknerd.com/clientarea.php(美国)
+(美国)
+https://my.racknerd.com/clientarea.php
 
 https://billing.dedirock.com/clientarea.php?action=services
 
@@ -15,7 +15,7 @@ https://console.ygcloud.com/dashboard/product/ecs/instanceCreate(南美)
 
 # VLESS 方案
 bash <(wget -qO- https://raw.githubusercontent.com/Jonnii-Laii/hysteria/main/VLESS&Reality.sh)
-
+--用下面的更好--
 bash <(wget -qO- "https://raw.githubusercontent.com/Jonnii-Laii/hysteria/main/VLESS&Reality.sh")
 
 
