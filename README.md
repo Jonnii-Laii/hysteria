@@ -22,6 +22,9 @@ bash <(wget -qO- https://raw.githubusercontent.com/Jonnii-Laii/hysteria/main/VLE
 
 bash <(wget -qO- "https://raw.githubusercontent.com/Jonnii-Laii/hysteria/main/VLESS&Reality.sh")
 
+--完整移除本机设置--
+
+bash <(curl -fsSL 'https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh') remove --purge
 
 # Hysteria2 方案
 bash <(wget -qO- https://raw.githubusercontent.com/Jonnii-Laii/hysteria/main/install_hysteria.sh)
