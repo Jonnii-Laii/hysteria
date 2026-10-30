@@ -16,7 +16,7 @@ echo "======================================"
 
 echo "🚀 安装官方 Xray..."
 
-bash <(wget -qO- 'https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh') install
+bash <(wget -qO- 'https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh') install --version v26.3.27
 
 
 
